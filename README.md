@@ -5,11 +5,18 @@
 
 ## 🔐 Site Authentication
 To access the protected areas of the site, please use the following credentials:
+| User Role | Username | Password |
+| :--- | :--- | :--- |
 | **Admin** | Arpita | Cornflower4817! |
+
 
 ## 🔐 Server Authentication
 To access the server, please use the following credentials:
+
+| User Role | Username | Password |
+| :--- | :--- | :--- |
 | **Grader** | grader | graderpsw |
+
 
 ---
 
