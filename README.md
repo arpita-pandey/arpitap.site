@@ -41,6 +41,13 @@ Server-side compression was enabled to optimize delivery speed and reduce bandwi
 * **Header Verification:** The **Response Headers** now include the `Content-Encoding: gzip` field, confirming that the Apache `mod_deflate` module is successfully compressing the HTML content before it leaves the server.
 
 
+### Server Header Modification:
+To modify the HTTP Server response header, I configured Apache as a reverse proxy for itself. The public HTTPS virtual host on port 443 
+proxies all requests to an internal Apache virtual host running on port 8080. I then rewrote the Server header in the proxy response layer 
+using mod_headers. This approach ensures the header is modified after Apache’s core header injection, guaranteeing that the custom Server 
+value is returned in all HTTPS responses.
+
+
 ## Motamo Dashboard: 
 * **Live Site Link:** https://arpitap.site/matomo/
 *  **Process:** I successfully installed and configured Matomo on my Ubuntu server by creating a dedicated MySQL database and user, downloading the official source package to my web root, and completing the web-based installation wizard. After setting up the administrative Super User account, I integrated the platform into my site by embedding the provided JavaScript tracking snippet into the header of my index.html and hello.php files. This allows for real-time visitor analytics, which can be verified via the live dashboard link provided in this document.
