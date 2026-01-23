@@ -1,29 +1,34 @@
 # arpitap.site
-https://arpitap.site/
-Site PSW
+**URL:** [https://arpitap.site/](https://arpitap.site/)
 
+---
 
-Username: Arpita
-Password: Cornflower4817!
+## 🔐 Site Authentication
+To access the protected areas of the site, please use the following credentials:
 
+| User Role | Username | Password |
+| :--- | :--- | :--- |
+| **Admin** | Arpita | Cornflower4817! |
+| **Grader** | grader | graderpsw |
 
+---
 
-Grader Username: grader
-Grader Password: graderpsw
+## 🚀 GitHub Auto-Deployment
+I implemented a "Push-to-Deploy" workflow to automate site updates. 
 
-
-
-Github Deployment
-I created a deployment script, deploy.php, in my web root (e.g., /var/www/arpitap.site/public_html/) that executes a git pull command to  
-refresh the site's content. You then configured a GitHub Webhook in your repository settings to send a POST request to this script's URL
-upon every push event. To ensure this communication remains uninterrupted despite your site's basic authentication, I modified your Apache
-configuration file to explicitly allow public access to the deploy.php file, while also ensuring that the www-data user has the necessary
-permissions and SSH keys to pull code from GitHub securely.
-
-Compression 
-After enabling compression, the primary change observed in DevTools is the divergence between Transferred Size and Resource Size in the  
-Network tab. The former reflects the smaller, compressed file sent over the wire, while the latter shows the original file size.
-Additionally, the Response Headers now include a Content-Encoding field of gzip, verifying that the server-side compression was successful. 
+### Implementation Details:
+* **Deployment Script:** A PHP script (`deploy.php`) is located in the web root. When triggered, it executes a `git pull` command to synchronize the server with the latest changes from the GitHub repository.
+* **GitHub Webhook:** Configured a webhook in the GitHub repository settings to send a POST request to the `deploy.php` URL immediately upon every `push` event.
+* **Apache Configuration:** To ensure the webhook can trigger the update without being blocked by Basic Authentication, I modified the Apache site configuration to explicitly allow public access to `deploy.php` using the `Files` directive and `Satisfy Any`.
+* **Security:** The `www-data` user was configured with the necessary SSH keys and permissions to pull code from GitHub securely via the server.
 
 
 
+---
+
+## ⚡ Compression & Performance
+Server-side compression was enabled to optimize delivery speed and reduce bandwidth usage.
+
+### DevTools Observations:
+* **Size Divergence:** In the **Network** tab, there is a significant difference between **Transferred Size** and **Resource Size**. The transferred size is much smaller, representing the compressed data sent over the wire.
+* **Header Verification:** The **Response Headers** now include the `Content-Encoding: gzip` field, confirming that the Apache `mod_deflate` module is successfully compressing the HTML content before it leaves the server.
