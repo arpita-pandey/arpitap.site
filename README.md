@@ -39,3 +39,9 @@ Server-side compression was enabled to optimize delivery speed and reduce bandwi
 ### DevTools Observations:
 * **Size Divergence:** In the **Network** tab, there is a significant difference between **Transferred Size** and **Resource Size**. The transferred size is much smaller, representing the compressed data sent over the wire.
 * **Header Verification:** The **Response Headers** now include the `Content-Encoding: gzip` field, confirming that the Apache `mod_deflate` module is successfully compressing the HTML content before it leaves the server.
+
+
+## Motamo Dashboard: 
+* **Live Site Link:** https://arpitap.site/matomo/
+*  **Process:** I successfully installed and configured Matomo on my Ubuntu server by creating a dedicated MySQL database and user, downloading the official source package to my web root, and completing the web-based installation wizard. After setting up the administrative Super User account, I integrated the platform into my site by embedding the provided JavaScript tracking snippet into the header of my index.html and hello.php files. This allows for real-time visitor analytics, which can be verified via the live dashboard link provided in this document.
+
