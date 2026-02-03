@@ -1,4 +1,5 @@
 # arpitap.site
+**Github URL:** https://github.com/arpita-pandey/arpitap.site
 **URL:** [https://arpitap.site/](https://arpitap.site/)
 
 ---
@@ -39,6 +40,13 @@ Server-side compression was enabled to optimize delivery speed and reduce bandwi
 ### DevTools Observations:
 * **Size Divergence:** In the **Network** tab, there is a significant difference between **Transferred Size** and **Resource Size**. The transferred size is much smaller, representing the compressed data sent over the wire.
 * **Header Verification:** The **Response Headers** now include the `Content-Encoding: gzip` field, confirming that the Apache `mod_deflate` module is successfully compressing the HTML content before it leaves the server.
+
+
+### Server Header Modification:
+To modify the HTTP Server response header, I configured Apache as a reverse proxy for itself. The public HTTPS virtual host on port 443 
+proxies all requests to an internal Apache virtual host running on port 8080. I then rewrote the Server header in the proxy response layer 
+using mod_headers. This approach ensures the header is modified after Apache’s core header injection, guaranteeing that the custom Server 
+value is returned in all HTTPS responses.
 
 
 ## Motamo Dashboard: 
