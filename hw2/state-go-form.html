@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-D8LKZ1WTJC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-C0G1900KGG');
+  </script>
+  
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="a9dcdca8-ed3f-4a47-9952-b4999349a3da"></script>
+  <title>State Demo (Go) — Form</title></head>
+<body>
+  <h1>State Demo (Go) — Save</h1>
+
+  <form method="POST" action="/cgi-bin/state-go?action=save">
+    <p><label>Name: <input name="name"></label></p>
+    <p><label>Favorite color: <input name="fav"></label></p>
+    <p><label>Note: <input name="note"></label></p>
+    <p><button type="submit">Save</button></p>
+  </form>
+
+  <p><a href="/hw2/state-go-view.html">View saved state</a></p>
+  <p><a href="/cgi-bin/state-go?action=clear">Clear state</a></p>
+</body>
+</html>

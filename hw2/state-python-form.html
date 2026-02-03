@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-D8LKZ1WTJC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-C0G1900KGG');
+  </script>
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="a9dcdca8-ed3f-4a47-9952-b4999349a3da"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>State Demo (Python) — Form</title>
+</head>
+<body>
+  <h1>State Demo (Python) — Save</h1>
+  <p>Enter values and save them server-side via a cookie.</p>
+
+  <form method="POST" action="/cgi-bin/state-python.py?action=save">
+    <p><label>Name: <input name="name" /></label></p>
+    <p><label>Favorite color: <input name="fav" /></label></p>
+    <p><label>Note: <input name="note" /></label></p>
+    <p><button type="submit">Save</button></p>
+  </form>
+
+  <p><a href="/hw2/state-python-view.html">View saved state</a></p>
+  <p><a href="/cgi-bin/state-python.py?action=clear">Clear state</a></p>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-D8LKZ1WTJC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-C0G1900KGG');
+  </script>
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="a9dcdca8-ed3f-4a47-9952-b4999349a3da"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>State Demo (Python) — View</title>
+</head>
+<body>
+  <h1>State Demo (Python) — View</h1>
+
+  <p><a href="/hw2/state-python-form.html">Back to form</a></p>
+  <p><a href="/cgi-bin/state-python.py?action=clear">Clear state</a></p>
+
+  <h2>Saved State (from server cookie)</h2>
+  <pre id="out">Loading...</pre>
+
+  <script>
+    fetch("/cgi-bin/state-python.py?action=get", { cache: "no-store" })
+      .then(r => r.json())
+      .then(j => {
+        document.getElementById("out").textContent = JSON.stringify(j, null, 2);
+      })
+      .catch(e => {
+        document.getElementById("out").textContent = String(e);
+      });
+  </script>
+
+  <noscript>
+    <p>JavaScript is off. You can still view state by opening:</p>
+    <p><a href="/cgi-bin/state-python.py?action=get">/cgi-bin/state-python.py?action=get</a></p>
+  </noscript>
+</body>
+</html>

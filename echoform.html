@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-D8LKZ1WTJC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-C0G1900KGG');
+  </script>
+  <script src="https://cdn.lr-ingest.com/LogRocket.min.js" crossorigin="anonymous"></script>
+    <script>
+    window.LogRocket && window.LogRocket.init('ig21nd/arpitapsite');
+  </script>
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="a9dcdca8-ed3f-4a47-9952-b4999349a3da"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Echo Form</title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; margin: 24px; max-width: 980px; }
+    h1 { margin: 0 0 10px; font-size: 22px; }
+    .note { font-size: 13px; opacity: .85; margin-bottom: 14px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    label { display: block; font-size: 12px; opacity: .85; margin: 6px 0; }
+    select, input, button, textarea { width: 100%; padding: 10px; box-sizing: border-box; border-radius: 10px; border: 1px solid rgba(0,0,0,.2); }
+    .card { border: 1px solid rgba(0,0,0,.15); border-radius: 14px; padding: 14px; margin-top: 14px; }
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .btnRow { display: flex; gap: 10px; margin-top: 12px; }
+    .btnRow button { width: auto; padding: 10px 14px; cursor: pointer; }
+    textarea { min-height: 220px; font-family: ui-monospace, Menlo, Consolas, monospace; }
+    .mono { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <h1>HW2 Echo Tester</h1>
+  <div class="note">
+    JS off: works in reduced mode (GET/POST). JS on: supports PUT/DELETE + JSON via fetch().
+  </div>
+
+  <!-- Reduced-mode form: always submits with GET or POST -->
+  <!-- JS will prevent default and do fetch() for full functionality -->
+  <form id="echoForm" method="GET" action="">
+    <div class="card">
+      <div class="grid">
+        <div>
+          <label for="lang">Language / Endpoint</label>
+          <select id="lang" name="lang">
+            <option value="php">PHP</option>
+            <option value="python">Python</option>
+            <option value="go">Go</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="methodPick">HTTP Method</label>
+          <select id="methodPick" name="method">
+            <option>GET</option>
+            <option>POST</option>
+            <option>PUT</option>
+            <option>DELETE</option>
+          </select>
+          <div class="note mono" id="jsOffHint"></div>
+        </div>
+
+        <div>
+          <label for="encodingPick">Encoding</label>
+          <select id="encodingPick" name="encoding">
+            <option value="application/x-www-form-urlencoded">application/x-www-form-urlencoded</option>
+            <option value="application/json">application/json</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="row2">
+          <div>
+            <label for="id">id (useful for PUT/DELETE)</label>
+            <input id="id" name="id" placeholder="123" />
+          </div>
+          <div>
+            <label for="name">name</label>
+            <input id="name" name="name" placeholder="Your name" />
+          </div>
+        </div>
+
+        <div style="margin-top: 12px;">
+          <label for="message">message</label>
+          <input id="message" name="message" placeholder="hello world" />
+        </div>
+
+        <div class="btnRow">
+          <button type="submit" id="submitBtn">Send</button>
+          <button type="button" id="resetBtn">Reset</button>
+        </div>
+
+        <div class="note" style="margin-top:10px;">
+          Request preview: <span class="mono" id="preview">—</span>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <div class="card">
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
+      <div><strong>Response</strong></div>
+      <div class="mono" id="statusLine">—</div>
+    </div>
+    <textarea id="out" readonly spellcheck="false"></textarea>
+  </div>
+
+  <noscript>
+    <div class="card">
+      <strong>JavaScript is off.</strong>
+      <div class="note">
+        This page will submit only via normal HTML forms (GET/POST). PUT/DELETE and JSON body require JavaScript.
+      </div>
+    </div>
+  </noscript>
+
+<script>
+  // TODO: Change these to your real echo endpoints
+  // Common patterns:
+  // - CGI: /cgi-bin/echo-php.cgi, /cgi-bin/echo-python.cgi, /cgi-bin/echo-go.cgi
+  // - Or: /hw2/echo/echo.php etc.
+  const ENDPOINTS = {
+    php: "/cgi-bin/echo-php.php",
+    python: "/cgi-bin/echo-python.py",
+    go: "/cgi-bin/echo-go.go"
+  };
+
+  const form = document.getElementById("echoForm");
+  const lang = document.getElementById("lang");
+  const methodPick = document.getElementById("methodPick");
+  const encodingPick = document.getElementById("encodingPick");
+  const out = document.getElementById("out");
+  const statusLine = document.getElementById("statusLine");
+  const preview = document.getElementById("preview");
+  const jsOffHint = document.getElementById("jsOffHint");
+
+  function getFields() {
+    return {
+      id: document.getElementById("id").value,
+      name: document.getElementById("name").value,
+      message: document.getElementById("message").value
+    };
+  }
+
+function buildUrl(path, method, fields) {
+  const url = new URL(path, window.location.origin);
+
+  // Only GET uses query params (send only actual fields)
+  if (method === "GET") {
+    for (const [k, v] of Object.entries(fields)) {
+      if (v !== undefined && v !== null && String(v).length > 0) {
+        url.searchParams.set(k, v);
+      }
+    }
+  }
+
+  return url.toString();
+}
+
+  function updateReducedModeHint() {
+    const m = methodPick.value;
+    const e = encodingPick.value;
+
+    // With JS ON we support all methods, but we still explain fallback behavior:
+    jsOffHint.textContent =
+      (m === "PUT" || m === "DELETE" || e === "application/json")
+        ? "JS needed for PUT/DELETE and JSON body; without JS it will fall back to GET/POST."
+        : "Works without JS.";
+  }
+
+  function updatePreview() {
+    const path = ENDPOINTS[lang.value];
+    const m = methodPick.value;
+    const fields = getFields();
+    const url = buildUrl(path, m, fields);
+
+    let body = "";
+    if (m !== "GET") {
+      if (encodingPick.value === "application/json") body = JSON.stringify(fields);
+      else body = new URLSearchParams(fields).toString();
+    }
+    preview.textContent = m + " " + url + (body ? " | body: " + body : "");
+    updateReducedModeHint();
+  }
+
+  async function sendFetch() {
+    out.value = "";
+    statusLine.textContent = "Sending…";
+
+    const path = ENDPOINTS[lang.value];
+    const m = methodPick.value;
+    const fields = getFields();
+    const url = buildUrl(path, m, fields);
+
+    const headers = new Headers();
+    const init = { method: m, headers };
+
+    // GET -> query params. Everything else -> body.
+    if (m !== "GET") {
+      headers.set("Content-Type", encodingPick.value);
+
+      if (encodingPick.value === "application/json") {
+        init.body = JSON.stringify(fields);
+      } else {
+        init.body = new URLSearchParams(fields).toString();
+      }
+    }
+
+    const res = await fetch(url, init);
+    statusLine.textContent = `${res.status} ${res.statusText}`;
+
+    const headerLines = [];
+    res.headers.forEach((v,k) => headerLines.push(`${k}: ${v}`));
+    headerLines.sort((a,b) => a.localeCompare(b));
+
+    const text = await res.text();
+    let bodyOut = text;
+    try { bodyOut = JSON.stringify(JSON.parse(text), null, 2); } catch (_) {}
+
+    out.value =
+      `URL: ${url}\nMethod: ${m}\nEncoding: ${encodingPick.value}\n\n` +
+      `--- Response Headers ---\n${headerLines.join("\n")}\n\n` +
+      `--- Response Body ---\n${bodyOut}\n`;
+  }
+
+  // JS-on enhancement: intercept submit and do fetch for all methods/encodings
+  form.addEventListener("submit", (ev) => {
+    ev.preventDefault();
+    sendFetch().catch(err => {
+      statusLine.textContent = "ERROR";
+      out.value = String(err);
+    });
+  });
+
+  document.getElementById("resetBtn").addEventListener("click", () => {
+    document.getElementById("id").value = "";
+    document.getElementById("name").value = "";
+    document.getElementById("message").value = "";
+    methodPick.value = "GET";
+    encodingPick.value = "application/x-www-form-urlencoded";
+    out.value = "";
+    statusLine.textContent = "—";
+    updatePreview();
+  });
+
+  [lang, methodPick, encodingPick,
+   document.getElementById("id"),
+   document.getElementById("name"),
+   document.getElementById("message")
+  ].forEach(el => el.addEventListener("input", updatePreview));
+
+  updatePreview();
+</script>
+</body>
+</html>

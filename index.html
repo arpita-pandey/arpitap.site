@@ -1,6 +1,20 @@
 <!DOCTYPE html>
 <html    lang="en">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-D8LKZ1WTJC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-D8LKZ1WTJC');
+  </script>
+  <script src="https://cdn.lr-ingest.com/LogRocket.min.js" crossorigin="anonymous"></script>
+    <script>
+    window.LogRocket && window.LogRocket.init('ig21nd/arpitapsite');
+  </script>
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="a9dcdca8-ed3f-4a47-9952-b4999349a3da"></script>
   <meta charset="UTF-8" />
   <title>CSE 135 – Winter 2026 </title>
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -73,6 +87,21 @@
       color: #00f;
     }
   </style>
+<!-- Matomo -->
+<script>
+  var _paq = window._paq = window._paq || [];
+  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//arpitap.site/matomo/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '1']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<!-- End Matomo Code -->
 </head>
 <body>
 
@@ -94,18 +123,52 @@
     <div class="section-content">
       <ul>
         <li><a href="/hello.php">PHP</a></li>
-        <li><a href="#">Node</a></li>
+        <li><a href="/robots.txt">Robots.txt</a></li>
         <li><a href="/report.html">Analytics</a></li>
+        <li><a href="/matomo">Matomo</a></li
       </ul>
     </div>
   </div>
 
-  <div class="section">
-    <h3>Homework 2</h3>
-    <div class="section-content">
-      TBD
-    </div>
+<div class="section">
+  <h3>Homework 2</h3>
+  <div class="section-content">
+
+    <h4>PHP</h4>
+    <ul>
+      <li><a href="/cgi-bin/hello-html-php.php">Hello HTML </a></li>
+      <li><a href="/cgi-bin/hello-json-php.php">Hello JSON</a></li>
+      <li><a href="/cgi-bin/environment-php.php">Environment</a></li>
+      <li><a href="/echoform.html">Echo Form</a></li>
+      <li><a href="/cgi-bin/echo-php.php">Echo Endpoint</a></li>
+      <li><a href="https://arpitap.site/cgi-bin/state-php.php">State Demo - Form</a></li>
+      <li><a href="https://arpitap.site/cgi-bin/state-php.php?action=view">State Demo - View</a></li>
+    </ul>
+
+    <h4>Python</h4>
+    <ul>
+      <li><a href="/cgi-bin/hello-html-python.py">Hello HTML </a></li>
+      <li><a href="/cgi-bin/hello-json-python.py">Hello JSON</a></li>
+      <li><a href="/cgi-bin/environment-python.py">Environment</a></li>
+      <li><a href="/echoform.html">Echo Form</a></li>
+      <li><a href="/cgi-bin/echo-python.py">Echo Endpoint</a></li>
+      <li><a href="/hw2/state-python-form.html">State Demo — Form</a></li>
+      <li><a href="/hw2/state-python-view.html">State Demo — View</a></li>
+    </ul>
+
+    <h4>Go</h4>
+    <ul>
+      <li><a href="/cgi-bin/hello-html-go">Hello HTML</a></li>
+      <li><a href="/cgi-bin/hello-json-go">Hello JSON</a></li>
+      <li><a href="/cgi-bin/environment-go">Environment</a></li>
+      <li><a href="/echoform.html">Echo Form</a></li>
+      <li><a href="/cgi-bin/echo-go">Echo Endpoint</a></li>
+      <li><a href="/hw2/state-go-form.html">State Demo — Form</a></li>
+      <li><a href="/hw2/state-go-view.html">State Demo — View</a></li>
+    </ul>
+
   </div>
+</div>
 
   <div class="section">
     <h3>Analytics App</h3>

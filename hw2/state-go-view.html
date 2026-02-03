@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-D8LKZ1WTJC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+   gtag('config', 'G-C0G1900KGG');
+  </script>
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="a9dcdca8-ed3f-4a47-9952-b4999349a3da"></script>
+<title>State Demo (Go) — View</title></head>
+<body>
+  <h1>State Demo (Go) — View</h1>
+
+  <p><a href="/hw2/state-go-form.html">Back to form</a></p>
+  <p><a href="/cgi-bin/state-go?action=clear">Clear state</a></p>
+
+  <h2>Saved state</h2>
+  <pre id="out">Loading…</pre>
+
+  <script>
+    fetch("/cgi-bin/state-go?action=get", { cache: "no-store" })
+      .then(r => r.json())
+      .then(j => out.textContent = JSON.stringify(j, null, 2))
+      .catch(e => out.textContent = String(e));
+  </script>
+
+  <noscript>
+    <p>JS off: open <a href="/cgi-bin/state-go?action=get">/cgi-bin/state-go?action=get</a></p>
+  </noscript>
+</body>
+</html>
