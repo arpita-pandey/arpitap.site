@@ -8,7 +8,7 @@
 To access the protected areas of the site, please use the following credentials:
 | User Role | Username | Password |
 | :--- | :--- | :--- |
-| **Admin** | Arpita | Cornflower4817! |
+| **Admin** | arpita | Cornflower4817! |
 
 
 ## 🔐 Server Authentication
@@ -52,4 +52,9 @@ value is returned in all HTTPS responses.
 ## Motamo Dashboard: 
 * **Live Site Link:** https://arpitap.site/matomo/
 *  **Process:** I successfully installed and configured Matomo on my Ubuntu server by creating a dedicated MySQL database and user, downloading the official source package to my web root, and completing the web-based installation wizard. After setting up the administrative Super User account, I integrated the platform into my site by embedding the provided JavaScript tracking snippet into the header of my index.html and hello.php files. This allows for real-time visitor analytics, which can be verified via the live dashboard link provided in this document.
+
+
+## HW 2: 
+* **Free Choice Analytics:** I chose Umami because it provides a lightweight, privacy-oriented analytics workflow (aggregate metrics rather than individual session replay), is straightforward to integrate with a single script, and offers enough reporting for course needs (pageviews, referrers, devices, countries). It also avoids the complexity of larger ad-tech-style tools while still providing actionable traffic insights.
+
 
