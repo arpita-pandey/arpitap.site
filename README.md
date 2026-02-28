@@ -57,4 +57,9 @@ value is returned in all HTTPS responses.
 ## HW 2: 
 * **Free Choice Analytics:** I chose Umami because it provides a lightweight, privacy-oriented analytics workflow (aggregate metrics rather than individual session replay), is straightforward to integrate with a single script, and offers enough reporting for course needs (pageviews, referrers, devices, countries). It also avoids the complexity of larger ad-tech-style tools while still providing actionable traffic insights.
 
+## HW 3: 
+site: https://test.arpitap.site/
+
+collector.js : Added session ID management, idle detection, scroll throttling, Blob-based sendBeacon implementation, PHP ingestion endpoint with MySQL storage, custom database schema, restricted DB user, reporting REST API with CRUD support, and enhanced Apache client hints logging.
+
 
