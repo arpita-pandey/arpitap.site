@@ -62,4 +62,28 @@ site: https://test.arpitap.site/
 
 collector.js : Added session ID management, idle detection, scroll throttling, Blob-based sendBeacon implementation, PHP ingestion endpoint with MySQL storage, custom database schema, restricted DB user, reporting REST API with CRUD support, and enhanced Apache client hints logging.
 
+## HW 4:
+
+## URL
+https://reporting.arpitap.site/login.php
+
+## Grader Login
+Username: grader
+Password: graderpass123
+
+## Requirement 1
+Implemented login, logout, protected dashboard, and protected reports pages using PHP sessions. Direct URL access without login is blocked.
+
+## Requirement 2
+Implemented a datastore-backed HTML table using the HW3 `events` table.
+
+## Requirement 3
+Implemented datastore-backed charts using Chart.js and the HW3 `events` table.
+
+## Protected Pages
+- /dashboard.php
+- /reports-table.php
+- /reports-charts.php
+
+
 
