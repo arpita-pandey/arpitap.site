@@ -64,23 +64,23 @@ collector.js : Added session ID management, idle detection, scroll throttling, B
 
 ## HW 4:
 
-URL
+URL:
 https://reporting.arpitap.site/login.php
 
-Grader Login
+Grader Login:
 Username: grader
 Password: graderpass123
 
-Requirement 1
+Requirement 1:
 Implemented login, logout, protected dashboard, and protected reports pages using PHP sessions. Direct URL access without login is blocked.
 
-Requirement 2
+Requirement 2:
 Implemented a datastore-backed HTML table using the HW3 `events` table.
 
-Requirement 3
+Requirement 3:
 Implemented datastore-backed charts using Chart.js and the HW3 `events` table.
 
-Protected Pages
+Protected Pages:
 - /dashboard.php
 - /reports-table.php
 - /reports-charts.php
