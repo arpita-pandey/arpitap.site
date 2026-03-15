@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Reporting System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-1: #0f172a;
+            --bg-2: #1e293b;
+            --card: #ffffff;
+            --text: #111827;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --success: #15803d;
+            --soft: #f8fafc;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            color: var(--text);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 760px;
+            background: var(--card);
+            border-radius: 18px;
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+            padding: 40px;
+        }
+
+        .eyebrow {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--primary);
+            background: #eff6ff;
+            border-radius: 999px;
+            padding: 8px 12px;
+            margin-bottom: 18px;
+        }
+
+        h1 {
+            font-size: 34px;
+            line-height: 1.15;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+
+        .subtitle {
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--muted);
+            margin-bottom: 30px;
+        }
+
+        .panel {
+            background: var(--soft);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 22px;
+            margin-bottom: 22px;
+        }
+
+        .panel h2,
+        .panel h3 {
+            font-size: 18px;
+            margin-bottom: 14px;
+            color: var(--text);
+        }
+
+        .features ul {
+            margin-left: 18px;
+            color: #374151;
+            line-height: 1.8;
+        }
+
+        .features li {
+            margin-bottom: 8px;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 28px 0 8px;
+        }
+
+        .cta-button,
+        .secondary-button {
+            display: inline-block;
+            padding: 14px 22px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 700;
+            transition: 0.2s ease;
+        }
+
+        .cta-button {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .cta-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .secondary-button {
+            background: #fff;
+            color: var(--primary);
+            border: 1px solid #cbd5e1;
+        }
+
+        .secondary-button:hover {
+            background: #f8fafc;
+        }
+
+        .creds {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-left: 5px solid var(--primary);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .creds p {
+            margin-bottom: 10px;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        .code {
+            display: inline-block;
+            background: #111827;
+            color: #f9fafb;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 13px;
+        }
+
+        .status {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-top: 8px;
+        }
+
+        .status-item {
+            background: #f0fdf4;
+            color: var(--success);
+            border: 1px solid #bbf7d0;
+            border-radius: 999px;
+            padding: 10px 14px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .note {
+            font-size: 13px;
+            color: var(--muted);
+            margin-top: 14px;
+            line-height: 1.6;
+        }
+
+        .docs a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .docs a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            margin-top: 28px;
+            padding-top: 18px;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.7;
+            text-align: center;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 26px 20px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .cta-button,
+            .secondary-button {
+                text-align: center;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <div class="eyebrow">CSE 135 Project</div>
+
+        <h1>Analytics Reporting System</h1>
+        <p class="subtitle">
+            A role-based reporting platform for viewing analytics, managing reports, and sharing saved insights across different user access levels.
+        </p>
+
+        <section class="panel features">
+            <h2>Included in this system</h2>
+            <ul>
+                <li><strong>Role-based access control</strong> for Super Admin, Analyst, and Viewer accounts</li>
+                <li><strong>Protected login flow</strong> with authenticated access to backend pages</li>
+                <li><strong>Saved reports</strong> for read-only viewing by viewer accounts</li>
+                <li><strong>Multiple report sections</strong> with charts, tables, and analyst commentary</li>
+                <li><strong>Export support</strong> for report output and sharing</li>
+                <li><strong>Structured dashboard experience</strong> for graders and test users</li>
+            </ul>
+        </section>
+
+        <div class="actions">
+            <a href="login.php" class="cta-button">Login to System</a>
+            <a href="../GRADER.md" class="secondary-button">Open Grader Guide</a>
+        </div>
+
+        <section class="panel creds">
+            <h3>Demo credentials</h3>
+            <p><strong>Super Admin:</strong> <span class="code">admin</span> / <span class="code">admin123</span></p>
+            <p><strong>Analyst:</strong> <span class="code">analyst</span> / <span class="code">analyst123</span></p>
+            <p><strong>Viewer:</strong> <span class="code">viewer</span> / <span class="code">viewer123</span></p>
+            <p><strong>Additional Viewer:</strong> <span class="code">grader</span> / <span class="code">[your existing password]</span></p>
+            <p class="note">
+                Update these values here only if they exactly match the users seeded in your database.
+            </p>
+        </section>
+
+        <section class="panel docs">
+            <h3>Documentation</h3>
+            <p class="note">
+                See <a href="../README.md">README.md</a> for project details and <a href="../GRADER.md">GRADER.md</a> for login flows, testing instructions, and known limitations.
+            </p>
+        </section>
+
+        <section class="panel">
+            <h3>System status</h3>
+            <div class="status">
+                <div class="status-item">Auth enabled</div>
+                <div class="status-item">Database connected</div>
+                <div class="status-item">Reporting ready</div>
+            </div>
+        </section>
+
+        <footer>
+            <p>&copy; 2026 Analytics Reporting System</p>
+            <p>Built for reporting, access control, and saved analytics workflows.</p>
+        </footer>
+    </main>
+</body>
+</html>
