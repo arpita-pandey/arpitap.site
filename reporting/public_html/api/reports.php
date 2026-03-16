@@ -127,11 +127,13 @@ switch ($method) {
             exit();
         }
 
+        $chart_snapshots = isset($data['chart_snapshots']) ? json_encode($data['chart_snapshots']) : null;
+
         $stmt = $pdo->prepare("
-            INSERT INTO reports (title, category_id, analyst_id, content, analyst_comments, is_public, status)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO reports (title, category_id, analyst_id, content, analyst_comments, is_public, status, chart_snapshots)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ");
-        $stmt->execute([$title, $category_id, $auth['sub'], $content, $comments, $is_public, $status]);
+        $stmt->execute([$title, $category_id, $auth['sub'], $content, $comments, $is_public, $status, $chart_snapshots]);
         echo json_encode(['id' => (int)$pdo->lastInsertId(), 'message' => 'Report created']);
         break;
 
@@ -163,11 +165,13 @@ switch ($method) {
         $is_public = intval($data['is_public'] ?? 0);
         $status = $data['status'] ?? 'draft';
 
+        $chart_snapshots = isset($data['chart_snapshots']) ? json_encode($data['chart_snapshots']) : null;
+
         $stmt = $pdo->prepare("
-            UPDATE reports SET title=?, category_id=?, content=?, analyst_comments=?, is_public=?, status=?
+            UPDATE reports SET title=?, category_id=?, content=?, analyst_comments=?, is_public=?, status=?, chart_snapshots=?
             WHERE id=?
         ");
-        $stmt->execute([$title, $category_id, $content, $comments, $is_public, $status, $id]);
+        $stmt->execute([$title, $category_id, $content, $comments, $is_public, $status, $chart_snapshots, $id]);
         echo json_encode(['message' => 'Report updated']);
         break;
 

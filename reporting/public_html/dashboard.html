@@ -888,6 +888,29 @@ async function renderViewReport(id) {
     pdfContent.appendChild(contentCard);
   }
 
+  // Chart snapshots
+  const snaps = report.chart_snapshots ? (typeof report.chart_snapshots === 'string' ? JSON.parse(report.chart_snapshots) : report.chart_snapshots) : [];
+  if (snaps.length) {
+    const snapCard = document.createElement('div');
+    snapCard.className = 'card';
+    snapCard.style.marginBottom = '20px';
+    const st = document.createElement('h3'); st.textContent = 'Charts'; st.style.marginBottom = '12px';
+    snapCard.appendChild(st);
+    snaps.forEach(s => {
+      const wrap = document.createElement('div');
+      wrap.style.cssText = 'margin-bottom:16px;text-align:center';
+      const cap = document.createElement('div');
+      cap.style.cssText = 'font-weight:600;font-size:13px;color:#555;margin-bottom:6px';
+      cap.textContent = s.label;
+      const img = document.createElement('img');
+      img.src = s.dataUrl;
+      img.style.cssText = 'max-width:100%;border:1px solid #eee;border-radius:4px';
+      wrap.append(cap, img);
+      snapCard.appendChild(wrap);
+    });
+    pdfContent.appendChild(snapCard);
+  }
+
   // Analyst comments
   if (report.analyst_comments) {
     const commCard = document.createElement('div');
@@ -954,6 +977,80 @@ async function renderCreateReport() {
   const commArea = document.createElement('textarea');
   commArea.style.cssText = 'width:100%;padding:10px;border:1px solid #ddd;border-radius:4px;font-size:14px;margin-bottom:16px;min-height:100px';
 
+  // Chart snapshots section
+  const snapLabel = document.createElement('label'); snapLabel.textContent = 'Chart Snapshots';
+  snapLabel.style.cssText = 'display:block;font-weight:600;margin-bottom:6px';
+  const snapHint = document.createElement('p');
+  snapHint.textContent = 'Capture live dashboard charts as static images to embed in this report.';
+  snapHint.style.cssText = 'font-size:12px;color:#888;margin-bottom:10px';
+
+  const snapBtnRow = document.createElement('div');
+  snapBtnRow.style.cssText = 'display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px';
+  const snapPreviews = document.createElement('div');
+  snapPreviews.style.cssText = 'display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px';
+  const chartSnapshots = [];
+
+  function addSnapBtn(label, fetchFn) {
+    const btn = document.createElement('button');
+    btn.textContent = '📸 ' + label;
+    btn.style.cssText = 'padding:6px 14px;background:#27ae60;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:12px';
+    btn.addEventListener('click', async () => {
+      btn.disabled = true; btn.textContent = 'Capturing...';
+      const snap = await fetchFn();
+      btn.disabled = false; btn.textContent = '📸 ' + label;
+      if (snap) {
+        chartSnapshots.push({ label, dataUrl: snap });
+        const wrap = document.createElement('div');
+        wrap.style.cssText = 'position:relative;border:1px solid #ddd;border-radius:4px;padding:4px;background:#fff';
+        const img = document.createElement('img'); img.src = snap;
+        img.style.cssText = 'width:200px;height:auto;display:block';
+        const cap = document.createElement('div');
+        cap.style.cssText = 'font-size:11px;color:#666;text-align:center;margin-top:4px';
+        cap.textContent = label;
+        const rm = document.createElement('button'); rm.textContent = '✕';
+        rm.style.cssText = 'position:absolute;top:2px;right:2px;background:#e74c3c;color:#fff;border:none;border-radius:50%;width:20px;height:20px;cursor:pointer;font-size:11px;line-height:20px;padding:0';
+        rm.addEventListener('click', () => {
+          const idx = chartSnapshots.findIndex(s => s.dataUrl === snap);
+          if (idx >= 0) chartSnapshots.splice(idx, 1);
+          wrap.remove();
+        });
+        wrap.append(img, cap, rm);
+        snapPreviews.appendChild(wrap);
+      }
+    });
+    snapBtnRow.appendChild(btn);
+  }
+
+  async function captureChart(apiFn, drawFn, chartLabel, w, h) {
+    const d = await apiFn();
+    if (!d) return null;
+    const offscreen = document.createElement('canvas'); offscreen.width = w; offscreen.height = h;
+    drawFn(offscreen, d);
+    return offscreen.toDataURL('image/png');
+  }
+
+  addSnapBtn('Overview: Daily Pageviews', async () => {
+    const d = await api(`/api/overview.php?start=${state.start}&end=${state.end}`);
+    if (!d?.daily_pageviews?.length) return null;
+    const c = document.createElement('canvas'); c.width = 700; c.height = 320;
+    drawLineChart(c, d.daily_pageviews.map(r=>r.date.slice(5)), d.daily_pageviews.map(r=>+r.count), '#667eea', 'Pageviews');
+    return c.toDataURL('image/png');
+  });
+  addSnapBtn('Performance: Load by Page', async () => {
+    const d = await api(`/api/performance.php?start=${state.start}&end=${state.end}`);
+    if (!d?.by_page?.length) return null;
+    const c = document.createElement('canvas'); c.width = 700; c.height = 320;
+    drawBarChart(c, d.by_page.map(r=>r.page), d.by_page.map(r=>+r.avg_load), '#f39c12');
+    return c.toDataURL('image/png');
+  });
+  addSnapBtn('Errors: Daily Trend', async () => {
+    const d = await api(`/api/errors.php?start=${state.start}&end=${state.end}`);
+    if (!d?.daily?.length) return null;
+    const c = document.createElement('canvas'); c.width = 700; c.height = 320;
+    drawLineChart(c, d.daily.map(r=>r.date.slice(5)), d.daily.map(r=>+r.count), '#e74c3c', 'Errors');
+    return c.toDataURL('image/png');
+  });
+
   // Options row
   const optRow = document.createElement('div'); optRow.style.cssText = 'display:flex;gap:16px;margin-bottom:16px;align-items:center';
 
@@ -984,7 +1081,8 @@ async function renderCreateReport() {
       content: contArea.value,
       analyst_comments: commArea.value,
       is_public: pubCheck.checked ? 1 : 0,
-      status: statusSel.value
+      status: statusSel.value,
+      chart_snapshots: chartSnapshots.map(s => ({ label: s.label, dataUrl: s.dataUrl }))
     };
     submitBtn.disabled = true; submitBtn.textContent = 'Creating...';
     const res = await api('/api/reports.php', { method: 'POST', body: JSON.stringify(body) });
@@ -996,7 +1094,8 @@ async function renderCreateReport() {
     }
   });
 
-  formCard.append(titleLabel, titleInput, catLabel, catSel, contLabel, contArea, commLabel, commArea, optRow, submitBtn, msg);
+  formCard.append(titleLabel, titleInput, catLabel, catSel, contLabel, contArea, commLabel, commArea,
+    snapLabel, snapHint, snapBtnRow, snapPreviews, optRow, submitBtn, msg);
   el.appendChild(formCard);
 }
 
@@ -1053,6 +1152,82 @@ async function renderEditReport(id) {
   commArea.style.cssText = 'width:100%;padding:10px;border:1px solid #ddd;border-radius:4px;font-size:14px;margin-bottom:16px;min-height:100px';
   commArea.value = report.analyst_comments || '';
 
+  // Chart snapshots section (edit)
+  const snapLabel = document.createElement('label'); snapLabel.textContent = 'Chart Snapshots';
+  snapLabel.style.cssText = 'display:block;font-weight:600;margin-bottom:6px';
+  const snapHint = document.createElement('p');
+  snapHint.textContent = 'Existing snapshots are preserved. You can add more or remove them.';
+  snapHint.style.cssText = 'font-size:12px;color:#888;margin-bottom:10px';
+
+  const snapBtnRow = document.createElement('div');
+  snapBtnRow.style.cssText = 'display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px';
+  const snapPreviews = document.createElement('div');
+  snapPreviews.style.cssText = 'display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px';
+
+  // Load existing snapshots
+  const existingSnaps = report.chart_snapshots ? (typeof report.chart_snapshots === 'string' ? JSON.parse(report.chart_snapshots) : report.chart_snapshots) : [];
+  const chartSnapshots = [...existingSnaps];
+
+  function renderSnapPreview(snap, idx) {
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'position:relative;border:1px solid #ddd;border-radius:4px;padding:4px;background:#fff';
+    const img = document.createElement('img'); img.src = snap.dataUrl;
+    img.style.cssText = 'width:200px;height:auto;display:block';
+    const cap = document.createElement('div');
+    cap.style.cssText = 'font-size:11px;color:#666;text-align:center;margin-top:4px';
+    cap.textContent = snap.label;
+    const rm = document.createElement('button'); rm.textContent = '✕';
+    rm.style.cssText = 'position:absolute;top:2px;right:2px;background:#e74c3c;color:#fff;border:none;border-radius:50%;width:20px;height:20px;cursor:pointer;font-size:11px;line-height:20px;padding:0';
+    rm.addEventListener('click', () => {
+      const i = chartSnapshots.findIndex(s => s.dataUrl === snap.dataUrl);
+      if (i >= 0) chartSnapshots.splice(i, 1);
+      wrap.remove();
+    });
+    wrap.append(img, cap, rm);
+    snapPreviews.appendChild(wrap);
+  }
+
+  existingSnaps.forEach((s, i) => renderSnapPreview(s, i));
+
+  function addEditSnapBtn(label, fetchFn) {
+    const btn = document.createElement('button');
+    btn.textContent = '📸 ' + label;
+    btn.style.cssText = 'padding:6px 14px;background:#27ae60;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:12px';
+    btn.addEventListener('click', async () => {
+      btn.disabled = true; btn.textContent = 'Capturing...';
+      const snapUrl = await fetchFn();
+      btn.disabled = false; btn.textContent = '📸 ' + label;
+      if (snapUrl) {
+        const snap = { label, dataUrl: snapUrl };
+        chartSnapshots.push(snap);
+        renderSnapPreview(snap, chartSnapshots.length - 1);
+      }
+    });
+    snapBtnRow.appendChild(btn);
+  }
+
+  addEditSnapBtn('Overview: Daily Pageviews', async () => {
+    const d = await api(`/api/overview.php?start=${state.start}&end=${state.end}`);
+    if (!d?.daily_pageviews?.length) return null;
+    const c = document.createElement('canvas'); c.width = 700; c.height = 320;
+    drawLineChart(c, d.daily_pageviews.map(r=>r.date.slice(5)), d.daily_pageviews.map(r=>+r.count), '#667eea', 'Pageviews');
+    return c.toDataURL('image/png');
+  });
+  addEditSnapBtn('Performance: Load by Page', async () => {
+    const d = await api(`/api/performance.php?start=${state.start}&end=${state.end}`);
+    if (!d?.by_page?.length) return null;
+    const c = document.createElement('canvas'); c.width = 700; c.height = 320;
+    drawBarChart(c, d.by_page.map(r=>r.page), d.by_page.map(r=>+r.avg_load), '#f39c12');
+    return c.toDataURL('image/png');
+  });
+  addEditSnapBtn('Errors: Daily Trend', async () => {
+    const d = await api(`/api/errors.php?start=${state.start}&end=${state.end}`);
+    if (!d?.daily?.length) return null;
+    const c = document.createElement('canvas'); c.width = 700; c.height = 320;
+    drawLineChart(c, d.daily.map(r=>r.date.slice(5)), d.daily.map(r=>+r.count), '#e74c3c', 'Errors');
+    return c.toDataURL('image/png');
+  });
+
   // Options row
   const optRow = document.createElement('div'); optRow.style.cssText = 'display:flex;gap:16px;margin-bottom:16px;align-items:center';
 
@@ -1095,7 +1270,8 @@ async function renderEditReport(id) {
       content: contArea.value,
       analyst_comments: commArea.value,
       is_public: pubCheck.checked ? 1 : 0,
-      status: statusSel.value
+      status: statusSel.value,
+      chart_snapshots: chartSnapshots.map(s => ({ label: s.label, dataUrl: s.dataUrl }))
     };
     saveBtn.disabled = true; saveBtn.textContent = 'Saving...';
     const res = await api('/api/reports.php?id=' + id, { method: 'PUT', body: JSON.stringify(body) });
@@ -1108,7 +1284,8 @@ async function renderEditReport(id) {
   });
 
   btnRow.append(saveBtn, cancelBtn);
-  formCard.append(titleLabel, titleInput, catLabel, catSel, contLabel, contArea, commLabel, commArea, optRow, btnRow, msg);
+  formCard.append(titleLabel, titleInput, catLabel, catSel, contLabel, contArea, commLabel, commArea,
+    snapLabel, snapHint, snapBtnRow, snapPreviews, optRow, btnRow, msg);
   el.appendChild(formCard);
 }
 

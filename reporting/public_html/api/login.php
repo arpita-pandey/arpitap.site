@@ -27,10 +27,13 @@ if (!$user || !password_verify($password, $user['password_hash'])) {
 
 $pdo->prepare("UPDATE users SET last_login = NOW() WHERE id = ?")->execute([$user['id']]);
 
-// Fetch analyst sections (super_admin gets all)
+// Fetch sections based on role
 $sections = [];
 if ($user['role'] === 'super_admin') {
     $sections = ['overview','performance','errors','reports','decisions','admin'];
+} elseif ($user['role'] === 'viewer') {
+    // Viewers can only see published reports
+    $sections = ['reports'];
 } else {
     $stmt2 = $pdo->prepare("SELECT LOWER(s.name) FROM analyst_sections a JOIN sections s ON a.section_id = s.id WHERE a.analyst_id = ?");
     $stmt2->execute([$user['id']]);
